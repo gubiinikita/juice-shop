@@ -9,7 +9,7 @@ describe('empty spec', () => {
     cy.get('[aria-label="Show/hide account menu"]').click();
     cy.get('button[aria-label="Go to login page"]').click();
     cy.get('[href="#/register"]').click();
-    cy.get('[aria-label="Email address field"]').type('pap12@papa.com');
+    cy.get('[aria-label="Email address field"]').type('pap123@papa.com');
     cy.get('[aria-label="Field for the password"]').type('pwd123@Aa');
     cy.get('[aria-label="Field to confirm the password"]').type('pwd123@Aa');
     //добавить проверку подсказок для пароля
@@ -76,19 +76,33 @@ describe('empty spec', () => {
     cy.get('[aria-label="Complete your purchase"]').click();
   })
 
-  it('Search and order item from main page', () => {
+  it.skip('Search and order item from main page and order it', () => {
     cy.visit('http://juice-shop-sanitarskyi.herokuapp.com');
     cy.get('[aria-label="Close Welcome Banner"]').click();
     cy.get('[aria-label="Show/hide account menu"]').click();
     cy.get('button[aria-label="Go to login page"]').click();
-    cy.get('[aria-label="Text field for the login email"]').type('pap1@papa.com');
+    cy.get('[aria-label="Text field for the login email"]').type('pap123@papa.com');
     cy.get('[aria-label="Text field for the login password"]').type('pwd123@Aa');
     cy.get('[aria-label="Login"]').click();
 
     cy.get('[aria-label="dismiss cookie message"]').click();
-    searchExistingProductPageByPage(' Orange Juice (1000ml) ')
+    searchExistingProductPageByPage(' Orange Juice (1000ml) ');
+    // добить, когда переведу все в классы и т.п
   })
 
-
-  //cy.get('[class="mat-card mat-focus-indicator mat-elevation-z6 ribbon-card"]').contains(" Apple Juice (1000ml) ").click(); - форма ОС
+  it('Feedback form', () => {
+    cy.visit('http://juice-shop-sanitarskyi.herokuapp.com/#/contact');
+    cy.get('[aria-label="Close Welcome Banner"]').click();
+    cy.get('[id="comment"]').type("Your juice is cool, but I didn't like the taste of the apple juice");
+    cy.get('[id="rating"]').type('{rightArrow}{rightArrow}{leftArrow}')
+    // добавить првоерку на 4 звезды
+    cy.get('[id="captcha"]').then(function($elem) {
+      cy.log($elem.text());
+      let kekw = eval($elem.text());
+      cy.log(kekw);
+      cy.get('[id="captchaControl"]').type(kekw);
+      cy.get('[id="submitButton"]').click();
+    })
+    //добавить проверку того, что сообщение отправлено (там попапчик на пару сек появляется)
+  })
 })
